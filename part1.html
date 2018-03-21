@@ -7,6 +7,13 @@
         body {
             margin: 0;
         }
+        canvas {
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -15,7 +22,7 @@
 
     var config = {
         type: Phaser.AUTO,
-        width: 800,
+        width: 1000,
         height: 600,
         physics: {
             default: 'arcade',
@@ -32,21 +39,55 @@
     };
 
     var game = new Phaser.Game(config);
+    var ship; 
+    var cursors;
 
     function preload ()
     {
-        this.load.image('background', 'assets/space-background.jpg');
+        this.load.image('background', 'assets/space.jpg');
         this.load.image('spaceship', 'assets/spaceship.png');
+
     }
 
     function create ()
     {
         this.add.image(400, 300, 'background');
-        this.add.image(400,300, 'spaceship');
+
+        ship = this.physics.add.sprite(500, 450, 'spaceship');
+        ship.setCollideWorldBounds(true);
+        
+        //animations
+        this.anims.create({
+            key: 'left',
+        });
+        this.anims.create({
+            key: 'right',
+        });
+        
+        this.anims.create({
+            key: 'up',
+        });
+        
+        // Input Events
+        cursors = this.input.keyboard.createCursorKeys();
     }
 
     function update ()
     {
+        if(cursors.left.isDown){
+            ship.setVelocityX(-160);
+//            ship.anims.play('left', true);
+        }
+        else if(cursors.right.isDown){
+            ship.setVelocityX(160);
+//            ship.anims.play('right',true);
+        } else if(cursors.up.isDown) {
+            ship.setVelocityY(-160);
+        }
+        else {
+            ship.setVelocityX(0);
+            ship.setVelocityY(0);
+        }
         
     }
 
