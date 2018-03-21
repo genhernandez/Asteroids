@@ -35,16 +35,19 @@
 
     function preload ()
     {
-        this.load.image('background', 'assets/space.jpeg');
+        this.load.image('background', 'assets/space-background.jpg');
+        this.load.image('spaceship', 'assets/spaceship.png');
     }
 
     function create ()
     {
         this.add.image(400, 300, 'background');
+        this.add.image(400,300, 'spaceship');
     }
 
     function update ()
     {
+        
     }
 
 </script>
