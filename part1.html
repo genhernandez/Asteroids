@@ -2,6 +2,8 @@
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
+<!--    <script src="phaser.js"></script>-->
+<!--            <script src="//cdn.jsdelivr.net/npm/phaser@3.3.0/dist/phaser.js"></script>-->
     <script src="//cdn.jsdelivr.net/npm/phaser@3.1.1/dist/phaser.js"></script>
     <style type="text/css">
         body {
@@ -27,7 +29,6 @@
         physics: {
             default: 'arcade',
             arcade: {
-                gravity: {y:300},
                 debug: false
             }
         },
@@ -41,18 +42,22 @@
     var game = new Phaser.Game(config);
     var ship; 
     var cursors;
+    var starfield;
+    
+
 
     function preload ()
     {
-        this.load.image('background', 'assets/space.jpg');
+        this.load.image('background', 'assets/space-background.jpg');
         this.load.image('spaceship', 'assets/spaceship.png');
-
     }
 
     function create ()
     {
-        this.add.image(400, 300, 'background');
-
+        
+        starfield = this.add.tileSprite(400, 300, 1280, 720,'background'); 
+        starfield.fixedToCamera = true; 
+        
         ship = this.physics.add.sprite(500, 450, 'spaceship');
         ship.setCollideWorldBounds(true);
         
@@ -68,26 +73,43 @@
             key: 'up',
         });
         
+        this.anims.create({
+            key: 'down'
+        });
         // Input Events
         cursors = this.input.keyboard.createCursorKeys();
+//        game.camera.setBoundsToWorld();
+        this.cameras.main.setBounds(0, 0, 1000,600);
+        this.cameras.main.startFollow(ship);
     }
 
     function update ()
     {
+    
         if(cursors.left.isDown){
             ship.setVelocityX(-160);
-//            ship.anims.play('left', true);
+            starfield.tilePositionX -= 10;
         }
         else if(cursors.right.isDown){
             ship.setVelocityX(160);
-//            ship.anims.play('right',true);
+            starfield.tilePositionX += 10;
+
         } else if(cursors.up.isDown) {
             ship.setVelocityY(-160);
+            starfield.tilePositionY -= 10;
+
+        }
+        else if(cursors.down.isDown){
+            ship.setVelocityY(160);
+            starfield.tilePositionY += 10;
+
         }
         else {
             ship.setVelocityX(0);
             ship.setVelocityY(0);
         }
+        
+        
         
     }
 
