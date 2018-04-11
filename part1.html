@@ -43,7 +43,8 @@
     var ship; 
     var cursors;
     var starfield;
-    var astronaut;
+    var astronauts;
+    var asteroids;
 
 
     function preload ()
@@ -51,6 +52,7 @@
         this.load.image('background', 'assets/space-background.jpg');
         this.load.image('spaceship', 'assets/spaceship.png');
         this.load.spritesheet('dude', 'assets/astronaut.png', { frameWidth: 37, frameHeight: 50 });
+        this.load.image('rock', 'assets/rock.png');
     }
 
     function create ()
@@ -63,11 +65,15 @@
         ship = this.physics.add.sprite(500, 450, 'spaceship');
         ship.setCollideWorldBounds(true);
         
-        astronaut = this.physics.add.group({
-        key: 'dude',
-        repeat: 11,
-        setXY: { x: -50, y: 80, stepX: 100 }
+        astronauts = this.physics.add.group({
+            key: 'dude',
+            repeat: 11,
+            setXY: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 600), stepX: 100 }
         });
+        
+        //create a group of rocks here
+        
+        console.log(Math.floor(Math.random() * 10001));
         
         //animations
         this.anims.create({
@@ -91,7 +97,10 @@
         this.cameras.main.startFollow(ship);
         
         
-        this.physics.add.overlap(ship, astronaut, collectAstronaut, null, this);
+        this.physics.add.overlap(ship, astronauts, collectAstronaut, null, this);
+        
+        //add a collider, like the one in part10.html in the phaser tutorial
+        //you'll need to write a function like hitBomb
 
     }
 
@@ -126,11 +135,20 @@
     }
     
     function collectAstronaut (ship, astronaut)
-{
-    astronaut.disableBody(true, true);
+    {
+        astronaut.disableBody(true, true);
+        
+        if(astronauts.countActive(true) == 0){
+            astronauts.children.iterate(function (child) {
+                child.enableBody(true, child.x, 0, true, true);
+            });
+        }
 
     
-}
+    }
+    
+    //add a hitRock function that pauses the game for now
+    //eventually, this will decrease the score and check if its game over
 
 </script>
 
