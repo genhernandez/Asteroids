@@ -43,23 +43,31 @@
     var ship; 
     var cursors;
     var starfield;
-    
+    var astronaut;
 
 
     function preload ()
     {
         this.load.image('background', 'assets/space-background.jpg');
         this.load.image('spaceship', 'assets/spaceship.png');
+        this.load.spritesheet('dude', 'assets/astronaut.png', { frameWidth: 37, frameHeight: 50 });
     }
 
     function create ()
     {
         
+
         starfield = this.add.tileSprite(400, 300, 1280, 720,'background'); 
         starfield.fixedToCamera = true; 
         
         ship = this.physics.add.sprite(500, 450, 'spaceship');
         ship.setCollideWorldBounds(true);
+        
+        astronaut = this.physics.add.group({
+        key: 'dude',
+        repeat: 11,
+        setXY: { x: -50, y: 80, stepX: 100 }
+        });
         
         //animations
         this.anims.create({
@@ -81,6 +89,10 @@
 //        game.camera.setBoundsToWorld();
         this.cameras.main.setBounds(0, 0, 1000,600);
         this.cameras.main.startFollow(ship);
+        
+        
+        this.physics.add.overlap(ship, astronaut, collectAstronaut, null, this);
+
     }
 
     function update ()
@@ -112,6 +124,13 @@
         
         
     }
+    
+    function collectAstronaut (ship, astronaut)
+{
+    astronaut.disableBody(true, true);
+
+    
+}
 
 </script>
 
