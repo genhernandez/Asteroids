@@ -68,14 +68,22 @@
         astronauts = this.physics.add.group();
         astronauts.enableBody = true;
         for (var i = 0; i < 12; i++){
-            var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude')
+            var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude');
+            astronaut.body.bounce.set(0.9);
+            astronaut.body.velocity.x = Math.floor(Math.random() * 5);
+            astronaut.body.velocity.y = Math.floor(Math.random() * 5);
+            astronaut.checkWorldBounds = true;            
         }
         
         //create a group of rocks here
         asteroids = this.physics.add.group();
         asteroids.enableBody = true;
         for (var i = 0; i < 12; i++){
-            var asteroid = asteroids.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'rock')
+            var asteroid = asteroids.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'rock');
+            asteroid.body.bounce.set(0.9);
+            asteroid.body.velocity.x = Math.floor(Math.random() * 20);
+            asteroid.body.velocity.y = Math.floor(Math.random() * 20);
+            asteroid.checkWorldBounds = true;
         }
         
         //animations
@@ -105,13 +113,14 @@
         //add a collider, like the one in part10.html in the phaser tutorial
         //you'll need to write a function like hitBomb
      
-        this.physics.add.collider(ship, asteroids, hitAsteroids, null, this);
+        this.physics.add.overlap(ship, asteroids, hitAsteroids, null, this);
 
     }
 
     function update ()
     {
-    
+        
+        
         if(cursors.left.isDown){
             ship.setVelocityX(-160);
             starfield.tilePositionX -= 10;
@@ -135,28 +144,55 @@
             ship.setVelocityY(0);
         }
         
+        astronautTime--;
+        asteroidTime--;
         
+        checkAstronautTime();
+        checkAsteroidTime();
+    }
+    
+    var astronautTime = 1045;
+    var asteroidTime = 900;
+    
+    function checkAstronautTime() {
+          if(astronautTime <= 0){
+            for (var i = 0; i < 12; i++){
+                var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude');
+                astronaut.body.bounce.set(0.9);
+                astronaut.body.velocity.x = Math.floor(Math.random() * 5);
+                astronaut.body.velocity.y = Math.floor(Math.random() * 5);
+                astronaut.checkWorldBounds = true;            
+            }
+            astronautTime = 1045;
+        }
         
     }
     
+    function checkAsteroidTime() {
+        if(asteroidTime <= 0){
+            for (var i = 0; i < 12; i++){
+                var asteroid = asteroids.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'rock');
+                asteroid.body.bounce.set(0.9);
+                asteroid.body.velocity.x = Math.floor(Math.random() * 5);
+                asteroid.body.velocity.y = Math.floor(Math.random() * 5);
+                asteroid.checkWorldBounds = true;            
+            }
+            asteroidTime = 1000;
+        }
+        
+    }
     function collectAstronaut (ship, astronaut)
     {
         astronaut.disableBody(true, true);
-        
-        if(astronauts.countActive(true) == 0){
-            astronauts.children.iterate(function (child) {
-                child.enableBody(true, child.x, 0, true, true);
-            });
-        }
-
     
     }
     
     function hitAsteroids(ship, asteroid)
     {
-        
-
+        asteroid.disableBody(true, true);
     }
+
+    
 
 </script>
 
