@@ -65,15 +65,18 @@
         ship = this.physics.add.sprite(500, 450, 'spaceship');
         ship.setCollideWorldBounds(true);
         
-        astronauts = this.physics.add.group({
-            key: 'dude',
-            repeat: 11,
-            setXY: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 600), stepX: 100 }
-        });
+        astronauts = this.physics.add.group();
+        astronauts.enableBody = true;
+        for (var i = 0; i < 12; i++){
+            var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude')
+        }
         
         //create a group of rocks here
-        
-        console.log(Math.floor(Math.random() * 10001));
+        asteroids = this.physics.add.group();
+        asteroids.enableBody = true;
+        for (var i = 0; i < 12; i++){
+            var asteroid = asteroids.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'rock')
+        }
         
         //animations
         this.anims.create({
@@ -101,6 +104,8 @@
         
         //add a collider, like the one in part10.html in the phaser tutorial
         //you'll need to write a function like hitBomb
+     
+        this.physics.add.collider(ship, asteroids, hitAsteroids, null, this);
 
     }
 
@@ -147,8 +152,11 @@
     
     }
     
-    //add a hitRock function that pauses the game for now
-    //eventually, this will decrease the score and check if its game over
+    function hitAsteroids(ship, asteroid)
+    {
+        
+
+    }
 
 </script>
 
