@@ -72,14 +72,22 @@
         astronauts = this.physics.add.group();
         astronauts.enableBody = true;
         for (var i = 0; i < 12; i++){
-            var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude')
+            var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude');
+            astronaut.body.bounce.set(0.9);
+            astronaut.body.velocity.x = Math.floor(Math.random() * 5);
+            astronaut.body.velocity.y = Math.floor(Math.random() * 5);
+            astronaut.checkWorldBounds = true;            
         }
         
         //create a group of rocks here
         asteroids = this.physics.add.group();
         asteroids.enableBody = true;
         for (var i = 0; i < 12; i++){
-            var asteroid = asteroids.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'rock')
+            var asteroid = asteroids.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'rock');
+            asteroid.body.bounce.set(0.9);
+            asteroid.body.velocity.x = Math.floor(Math.random() * 20);
+            asteroid.body.velocity.y = Math.floor(Math.random() * 20);
+            asteroid.checkWorldBounds = true;
         }
         
         //animations
@@ -111,6 +119,7 @@
      
         this.physics.add.overlap(ship, asteroids, hitAsteroids, null, this);
 
+
          scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: 'white' });
         
         //add same for timer text
@@ -123,11 +132,13 @@
     function update ()
     {
         
+
         if(gameOver) {
             gameOver = this.add.text(100, 300, 'Game Over! Your score is: ' + score, { fontSize: '50px', fill: 'white' });
             return;            
         }
     
+
         if(cursors.left.isDown){
             ship.setVelocityX(-160);
             starfield.tilePositionX -= 10;
@@ -151,12 +162,47 @@
             ship.setVelocityY(0);
         }
         
-        
+        astronautTime--;
+        asteroidTime--;
+
         time = time - 1;
         timerText.setText('Time: ' + time);
         checkTimer(time);
+
+        checkAstronautTime();
+        checkAsteroidTime();
     }
     
+    var astronautTime = 1045;
+    var asteroidTime = 900;
+    
+    function checkAstronautTime() {
+          if(astronautTime <= 0){
+            for (var i = 0; i < 12; i++){
+                var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude');
+                astronaut.body.bounce.set(0.9);
+                astronaut.body.velocity.x = Math.floor(Math.random() * 5);
+                astronaut.body.velocity.y = Math.floor(Math.random() * 5);
+                astronaut.checkWorldBounds = true;            
+            }
+            astronautTime = 1045;
+        }
+        
+    }
+    
+    function checkAsteroidTime() {
+        if(asteroidTime <= 0){
+            for (var i = 0; i < 12; i++){
+                var asteroid = asteroids.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'rock');
+                asteroid.body.bounce.set(0.9);
+                asteroid.body.velocity.x = Math.floor(Math.random() * 5);
+                asteroid.body.velocity.y = Math.floor(Math.random() * 5);
+                asteroid.checkWorldBounds = true;            
+            }
+            asteroidTime = 1000;
+        }
+        
+    }
     function collectAstronaut (ship, astronaut)
     {
         astronaut.disableBody(true, true);
@@ -164,11 +210,10 @@
     scoreText.setText('Score: ' + score);
 
         if(astronauts.countActive(true) == 0){
-            for (var i = 0; i < 12; i++){
+          for (var i = 0; i < 12; i++){
             var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude')
+          }
         }
-        }
-
     
     }
     
@@ -180,12 +225,15 @@
     
     function hitAsteroids(ship, asteroid)
     {
+
         score -= 10; 
         if(score <= 0) {
             gameOver = true;
         }
-
+        asteroid.disableBody(true, true);
     }
+
+    
 
 </script>
 
