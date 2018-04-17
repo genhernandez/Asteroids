@@ -45,8 +45,12 @@
     var starfield;
     var astronauts;
     var asteroids;
-
-
+    var score = 0;
+    var scoreText;
+    var time = 1000;
+    var timerText;
+    var gameOver = false;
+    var gameOverText;
     function preload ()
     {
         this.load.image('background', 'assets/space-background.jpg');
@@ -115,12 +119,26 @@
      
         this.physics.add.overlap(ship, asteroids, hitAsteroids, null, this);
 
+
+         scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: 'white' });
+        
+        //add same for timer text
+        timerText = this.add.text(790, 16, 'time: 0', { fontSize: '32px', fill: 'white' });
+        
+        //add same for gameOver text
+
     }
 
     function update ()
     {
         
-        
+
+        if(gameOver) {
+            gameOver = this.add.text(100, 300, 'Game Over! Your score is: ' + score, { fontSize: '50px', fill: 'white' });
+            return;            
+        }
+    
+
         if(cursors.left.isDown){
             ship.setVelocityX(-160);
             starfield.tilePositionX -= 10;
@@ -146,7 +164,11 @@
         
         astronautTime--;
         asteroidTime--;
-        
+
+        time = time - 1;
+        timerText.setText('Time: ' + time);
+        checkTimer(time);
+
         checkAstronautTime();
         checkAsteroidTime();
     }
@@ -184,11 +206,30 @@
     function collectAstronaut (ship, astronaut)
     {
         astronaut.disableBody(true, true);
+         score += 10;
+    scoreText.setText('Score: ' + score);
+
+        if(astronauts.countActive(true) == 0){
+          for (var i = 0; i < 12; i++){
+            var astronaut = astronauts.create(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 600), 'dude')
+          }
+        }
     
+    }
+    
+    function checkTimer(time) {
+        if (time <= 0) {
+            gameOver = true;
+        }
     }
     
     function hitAsteroids(ship, asteroid)
     {
+
+        score -= 10; 
+        if(score <= 0) {
+            gameOver = true;
+        }
         asteroid.disableBody(true, true);
     }
 
