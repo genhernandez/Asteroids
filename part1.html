@@ -7,7 +7,16 @@
     <script src="//cdn.jsdelivr.net/npm/phaser@3.1.1/dist/phaser.js"></script>
     <style type="text/css">
         body {
-            margin: 0;
+            
+            background-color: lavender;
+            
+    
+            
+        }
+        h1 {
+            margin-left: 43%;
+            font-family: monospace;
+            font-size:40px
         }
         canvas {
             padding-left: 0;
@@ -15,11 +24,22 @@
             margin-left: auto;
             margin-right: auto;
             display: block;
+             
+                
+            
         }
     </style>
 </head>
 <body>
 
+<h1>Asteroids</h1>
+<audio id="hooray">
+    <source src="assets/sounds/hooray.wav" type="audio/wav">
+    
+</audio>
+    <audio id="explosion"> 
+        <source src="assets/sounds/MetalExplosion.wav" type="audio/wav">
+    </audio>
 <script type="text/javascript">
 
     var config = {
@@ -51,8 +71,12 @@
     var timerText;
     var gameOver = false;
     var gameOverText;
+    var hooray = document.getElementById("hooray");
+    var explosion = document.getElementById ("explosion");
     function preload ()
     {
+
+        
         this.load.image('background', 'assets/space-background.jpg');
         this.load.image('spaceship', 'assets/spaceship.png');
         this.load.spritesheet('dude', 'assets/astronaut.png', { frameWidth: 37, frameHeight: 50 });
@@ -62,7 +86,6 @@
     function create ()
     {
         
-
         starfield = this.add.tileSprite(400, 300, 1280, 720,'background'); 
         starfield.fixedToCamera = true; 
         
@@ -171,7 +194,7 @@
         checkAsteroidTime();
     }
     
-    var astronautTime = 1045;
+    var astronautTime = 845;
     var asteroidTime = 900;
     
     function checkAstronautTime() {
@@ -183,7 +206,7 @@
                 astronaut.body.velocity.y = Math.floor(Math.random() * 5);
                 astronaut.checkWorldBounds = true;            
             }
-            astronautTime = 1045;
+            astronautTime = 845;
         }
         
     }
@@ -203,9 +226,11 @@
     }
     function collectAstronaut (ship, astronaut)
     {
+        hooray.play();
+        
         astronaut.disableBody(true, true);
          score += 10;
-    scoreText.setText('Score: ' + score);
+        scoreText.setText('Score: ' + score);
 
         if(astronauts.countActive(true) == 0){
           for (var i = 0; i < 12; i++){
@@ -223,7 +248,7 @@
     
     function hitAsteroids(ship, asteroid)
     {
-
+         explosion.play();
         score -= 10; 
         if(score <= 0) {
             gameOver = true;
