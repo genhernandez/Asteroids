@@ -1,4 +1,6 @@
 <!doctype html> 
+<link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
@@ -6,17 +8,27 @@
 <!--            <script src="//cdn.jsdelivr.net/npm/phaser@3.3.0/dist/phaser.js"></script>-->
     <script src="//cdn.jsdelivr.net/npm/phaser@3.1.1/dist/phaser.js"></script>
     <style type="text/css">
+        html {
+            overflow-y: scroll;
+        }
         body {
             
             background-color: lavender;
-            
     
             
         }
+        p{
+            
+            font-family: Comfortaa;
+            font-size:20px;
+
+        }
         h1 {
             margin-left: 43%;
-            font-family: monospace;
+            font-family: Comfortaa;
             font-size:40px
+                            overflow: scroll;
+
         }
         canvas {
             padding-left: 0;
@@ -24,15 +36,21 @@
             margin-left: auto;
             margin-right: auto;
             display: block;
+
              
                 
             
         }
+        
     </style>
 </head>
 <body>
 
 <h1>Asteroids</h1>
+    <p>Use arrow keys to move the ship around to collect the astronauts while dodging asteroids before the time runs out. 
+        
+    <p>1 Astronaut= 10 points</p>
+    <p>1 Asteroid= - 10 points. Try to beat your score</p>
 <audio id="hooray">
     <source src="assets/sounds/hooray.wav" type="audio/wav">
     
@@ -248,8 +266,9 @@
     
     function hitAsteroids(ship, asteroid)
     {
-         explosion.play();
+        explosion.play();
         score -= 10; 
+        scoreText.setText('Score: ' + score);
         if(score <= 0) {
             gameOver = true;
         }
